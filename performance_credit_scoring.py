@@ -1,8 +1,8 @@
 #from modelop.monitors.assertions import check_input_types
+from sklearn.metrics import roc_auc_score
 from pathlib import Path
 import modelop.schema.infer as infer
 import pandas as pd
-import numpy as np
 import logging
 import json
 
@@ -14,11 +14,10 @@ LABEL_COLUMN = []
 # modelop.init
 def init(init_param):
 
-    global PROB_COLUMM
+    global PROB_COLUMN
     global ACTUAL_COLUMN
 
     job_json = init_param
-
 
     if job_json is not None:
         logger.info(
@@ -29,7 +28,7 @@ def init(init_param):
         monitoring_parameters = infer.set_monitoring_parameters(
             schema_json=input_schema_definition, check_schema=True
         )
-        PROB_COLUMM = monitoring_parameters['score_column']
+        PROB_COLUMN = monitoring_parameters['score_column']
         ACTUAL_COLUMN = monitoring_parameters['label_column']
 
     else:
@@ -47,11 +46,10 @@ def init(init_param):
             logger.error(missing_args_error)
             raise Exception(missing_args_error)
 
-
 # modelop.metrics
 def metrics(data: pd.DataFrame) -> dict:
-    giniNormalized = gini_normalized(data[ACTUAL_COLUMN],data[PROB_COLUMM])
-
+    c_stat = roc_auc_score(data[ACTUAL_COLUMN], data[PROB_COLUMN])
+    gini = c_stat * 2 - 1
 
     return {'Gini' :
         [{
@@ -59,31 +57,21 @@ def metrics(data: pd.DataFrame) -> dict:
             'test_category': "gini",
             'test_type': "gini",
             'test_id': "gini_test",
-            'values': { "Normalized Gini": giniNormalized }
+            'values': { 
+                "Gini": gini,
+                "C-Stat": c_stat
+            }
         }],
-        'Normalized_Gini': giniNormalized
+        'Gini': gini,
+        'C-Stat': c_stat
     }
-
-
-def gini(actual, pred, cmpcol = 0, sortcol = 1):
-    assert( len(actual) == len(pred) )
-    allData = np.asarray(np.c_[ actual, pred, np.arange(len(actual)) ], dtype=np.float)
-    allData = allData[ np.lexsort((allData[:,2], -1* allData[:,1])) ]
-    totalLosses = allData[:,0].sum()
-    giniSum = allData[:,0].cumsum().sum() / totalLosses
-
-    giniSum -= (len(actual) + 1) / 2.
-    return giniSum / len(actual)
-
-def gini_normalized(a, p):
-    return gini(a, p) / gini(a, a)
 
 def main():
     raw_json = Path('Gini/example_job.json').read_text()
     init_param = {'rawJson': raw_json}
     init(init_param)
     print('initialized parameters from job_json.')
-    print(PROB_COLUMM)
+    print(PROB_COLUMN)
     print(ACTUAL_COLUMN)
     data = pd.read_csv('Gini/rob_test.csv')
     print('read data.')
