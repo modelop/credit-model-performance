@@ -1,0 +1,97 @@
+{
+  "id": "036e80c4-485b-4fad-a55b-25c7180f2338",
+  "group": "modelop",
+  "version": 10,
+  "jobType": "MODEL_BATCH_TEST_JOB",
+  "createdDate": "2022-03-22T21:36:16.693Z",
+  "lastModifiedDate": "2022-03-22T21:37:30.401Z",
+  "createdBy": "SYSTEM",
+  "lastModifiedBy": "SYSTEM",
+  "jobStatus": "WAITING",
+  "jobResult": "UNKNOWN",
+  "enableInputSchemaChecking": false,
+  "enableOutputSchemaChecking": false,
+  "jobRunTime": 1647984978523,
+  "jobWaitTime": 1647984978520,
+  "jobEndTime": 1647985041148,
+  "lastUpdateFromRuntime": "2022-03-22T21:37:30.401Z",
+  "jobParameters": {},
+  "referenceModel": {
+	"storedModel": {
+	  "modelMetaData": {
+		"custom": {},
+		"tags": [],
+		"name": "Credit Scoring Model",
+		"description": "Model that predicts probability of default for credit",
+		"type": "PYTHON",
+		"inputSchema": [
+		  {
+			"schemaDefinition": {
+			  "type": "record",
+			  "name": "input_schema.avsc",
+			  "fields": [
+				{
+				  "type": "string",
+				  "specialValues": [],
+				  "scoringOptional": false,
+				  "role": "predictor",
+				  "protectedClass": false,
+				  "name": "input_var",
+				  "driftCandidate": false,
+				  "dataClass": "categorical"
+				},
+				{
+				  "type": "float",
+				  "specialValues": [],
+				  "scoringOptional": false,
+				  "role": "score",
+				  "protectedClass": false,
+				  "name": "probability",
+				  "driftCandidate": true,
+				  "dataClass": "numerical"
+				},
+				{
+				  "type": "int",
+				  "specialValues": [],
+				  "scoringOptional": false,
+				  "role": "non_predictor",
+				  "protectedClass": false,
+				  "name": "ally_score",
+				  "driftCandidate": true,
+				  "dataClass": "numerical",
+				  "bucketedColumn": true
+				},
+				{
+				  "type": "int",
+				  "specialValues": [],
+				  "scoringOptional": false,
+				  "role": "non_predictor",
+				  "protectedClass": false,
+				  "name": "fico_score",
+				  "driftCandidate": true,
+				  "dataClass": "numerical"
+				},
+				{
+				  "type": "int",
+				  "specialValues": [],
+				  "scoringOptional": false,
+				  "role": "label",
+				  "protectedClass": false,
+				  "name": "defaulted",
+				  "driftCandidate": true,
+				  "dataClass": "numerical",
+				  "positiveClassLabel": 1
+				}
+      ]
+			}
+		  }
+		],
+		"modelCategory": "BUSINESS_MODEL",
+		"modelUseCategory": "unassigned",
+		"modelOrganization": "company",
+		"modelRisk": "High",
+		"modelMethodology": "CNN"
+	  }
+	}
+  }
+}

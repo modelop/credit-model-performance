@@ -1,0 +1,9 @@
+{
+    "tags": [],
+    "name": "Performance Monitor - Credit Models",
+    "description": "Calculates the Gini and c-stat metrics for credit scoring models",
+    "modelCategory": "MODEL_MONITORING_MODEL",
+    "defaultAssociationRole": "PERFORMANCE_MODEL",
+    "frequentlyUsed": false,
+    "custom" : {}
+}
